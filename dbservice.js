@@ -37,7 +37,7 @@ function getBingoData() {
       return client.query(sql)
         .then(res => {
           const newrows = res.rows.map(row => {
-            let rowstoreturn = [];
+            let rowstoreturn = {};
             for (let r in row) {
               rowsToReturn[r] = encoding.convert(row[r], 'cp850', 'utf-8').toString();
             }
