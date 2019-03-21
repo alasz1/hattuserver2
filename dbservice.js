@@ -36,7 +36,6 @@ function getBingoData() {
       let sql = "SELECT * FROM bingo ORDER BY RANDOM() LIMIT 16;";
       return client.query(sql)
         .then(res => {
-          client.release();
           const newrows = res.rows.map(row => {
             let rowstoreturn = [];
             for (let r in row) {
@@ -44,6 +43,7 @@ function getBingoData() {
             }
             return rowstoreturn;
           })
+          client.release();
           return newrows;
         })
         .catch(err => {
