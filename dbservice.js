@@ -44,7 +44,6 @@ function getBingoData() {
             }
             return rowstoreturn;
           })
-          console.log(newrows);
           return newrows;
         })
         .catch(err => {
