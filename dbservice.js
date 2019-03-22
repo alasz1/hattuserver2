@@ -90,6 +90,22 @@ function getGeneratorTsemppi() {
     });
 };
 
+function getGeneratorKiroilu() {
+  return pool.connect()
+    .then(client => {
+      let sql = "SELECT sentence FROM generator WHERE category='kiroilu' ORDER BY RANDOM() LIMIT 1;";
+      return client.query(sql)
+        .then(res => {
+          client.release();
+          return res.rows;
+        })
+        .catch(err => {
+          client.release();
+          throw error;
+        });
+    });
+};
+
 // function addQuote(q, response) {
 //   console.log(q)
 //   return pool.connect()
@@ -119,4 +135,4 @@ const addQuote = (request, response) => {
   })
 }
 
-module.exports = { getBingoData, addQuote, getGeneratorAjatus, getGeneratorTsemppi };
+module.exports = { getBingoData, addQuote, getGeneratorAjatus, getGeneratorTsemppi, getGeneratorKiroilu };

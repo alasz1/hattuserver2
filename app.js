@@ -25,12 +25,16 @@ app.get('/api/bingo', function (req, res) {
 //  })
 
 // get generator ajatus
-app.get('/api/generaattori/:ajatus', function (req, res) {
+app.get('/api/ajatus/:ajatus', function (req, res) {
     dbserv.getGeneratorAjatus().then(data => { res.json(data) });
 })
 
-app.get('/api/generaattori/:tsemppi', function (req, res) {
+app.get('/api/tsemppi/:tsemppi', function (req, res) {
     dbserv.getGeneratorTsemppi().then(data => { res.json(data) });
+})
+
+app.get('/api/kiroilu/:kiroilu', function (req, res) {
+    dbserv.getGeneratorKiroilu().then(data => { res.json(data) });
 })
 
  // Post Quote to Generator
