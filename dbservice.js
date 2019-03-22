@@ -20,7 +20,7 @@ const conopts = {
   connectionString: process.env.DATABASE_URL,
   ssl: true,
   //sslmode: "require"
-  // client_encoding: "utf-8"
+  client_encoding: "utf-8"
   // sslmode: "require"
 };
 
