@@ -36,17 +36,17 @@ function getBingoData() {
       let sql = "SELECT * FROM bingo ORDER BY RANDOM() LIMIT 16;";
       return client.query(sql)
         .then(res => {
-          console.log("Ennen muutosta", res.rows);
-          const newrows = res.rows.map(row => {
-            let rowtoreturn = {};
-            for (let r in row) {
-              rowtoreturn[r] = encoding.convert(row[r], 'cp850', 'utf-8').toString();
-            }
-            return rowtoreturn;
-          })
+          // console.log("Ennen muutosta", res.rows);
+          // const newrows = res.rows.map(row => {
+          //   let rowtoreturn = {};
+          //   for (let r in row) {
+          //     rowtoreturn[r] = encoding.convert(row[r], 'latin6', 'utf-8').toString();
+          //   }
+          //   return rowtoreturn;
+          // })
           client.release();
-          console.log("Muutettu", newrows);
-          return newrows;
+          // console.log("Muutettu", newrows);
+          return res.rows;
         })
         .catch(err => {
           client.release();
