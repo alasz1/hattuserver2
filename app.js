@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Get Messages from Bingo
 app.get('/api/bingo', function (req, res) {
-     dbserv.getBingoData().then(data => { res.json(data) });
+    dbserv.getBingoData().then(data => { res.json(data) });
  })
 
  // Get generator quotes
