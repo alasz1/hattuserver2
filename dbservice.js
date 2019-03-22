@@ -1,6 +1,8 @@
 
 require('dotenv').config()
 
+const encoding = require('encoding');
+
 const Pool = require('pg').Pool;
 // const { Client } = require('pg');
 
@@ -17,6 +19,8 @@ const conopts = {
   database: process.env.DATABASE,
   connectionString: process.env.DATABASE_URL,
   ssl: true,
+  //sslmode: "require"
+  client_encoding: "utf-8"
   // sslmode: "require"
 };
 
@@ -32,7 +36,16 @@ function getBingoData() {
       let sql = "SELECT * FROM bingo ORDER BY RANDOM() LIMIT 16;";
       return client.query(sql)
         .then(res => {
+          // console.log("Ennen muutosta", res.rows);
+          // const newrows = res.rows.map(row => {
+          //   let rowtoreturn = {};
+          //   for (let r in row) {
+          //     rowtoreturn[r] = encoding.convert(row[r], 'latin6', 'utf-8').toString();
+          //   }
+          //   return rowtoreturn;
+          // })
           client.release();
+          // console.log("Muutettu", newrows);
           return res.rows;
         })
         .catch(err => {
@@ -89,6 +102,22 @@ function getGeneratorTsemppi() {
         });
     });
 };
+function getGeneratorKiroilu() {
+  return pool.connect()
+    .then(client => {
+      let sql = "SELECT sentence FROM generator WHERE category='kiroilu' ORDER BY RANDOM() LIMIT 1;";
+      return client.query(sql)
+        .then(res => {
+          client.release();
+          return res.rows;
+        })
+        .catch(err => {
+          client.release();
+          throw error;
+        });
+    });
+};
+
 function getGeneratorKiroilu() {
   return pool.connect()
     .then(client => {

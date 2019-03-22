@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Get Messages from Bingo
 app.get('/api/bingo', function (req, res) {
-     dbserv.getBingoData().then(data => { res.json(data) });
+    dbserv.getBingoData().then(data => { res.json(data) });
  })
 
  // Get generator quotes
@@ -25,16 +25,18 @@ app.get('/api/bingo', function (req, res) {
 //  })
 
 // get generator ajatus
-app.get('/api/generaattori/:ajatus', function (req, res) {
+app.get('/api/ajatus/:ajatus', function (req, res) {
     dbserv.getGeneratorAjatus().then(data => { res.json(data) });
 })
-//get generator tsemppi
-app.get('/api/generaattori/:tsemppi', function (req, res) {
+
+app.get('/api/tsemppi/:tsemppi', function (req, res) {
     dbserv.getGeneratorTsemppi().then(data => { res.json(data) });
 })
-app.get('/api/generaattori/:tsemppi', function (req, res) {
+
+app.get('/api/kiroilu/:kiroilu', function (req, res) {
     dbserv.getGeneratorKiroilu().then(data => { res.json(data) });
 })
+
  // Post Quote to Generator
 app.post('/api/bingo', function (req, res) {
     console.log(req.body)
