@@ -7,6 +7,8 @@ app.use(bodyParser.json());
 var router = express.Router();
 //const fs = require('fs');
 
+app.use(express.static("public"));
+
 const dbserv = require("./dbservice");
 var cors = require('cors');
 app.use(cors());
