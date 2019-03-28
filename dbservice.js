@@ -55,22 +55,6 @@ function getBingoData() {
     });
 };
 
-// function getGeneratorData() {
-//   return pool.connect()
-//     .then(client => {
-//       let sql = "SELECT * FROM generator ORDER BY RANDOM() LIMIT 1;";
-//       return client.query(sql)
-//         .then(res => {
-//           client.release();
-//           return res.rows;
-//         })
-//         .catch(err => {
-//           client.release();
-//           throw error;
-//         });
-//     });
-// };
-
 function getGeneratorAjatus() {
   return pool.connect()
     .then(client => {
@@ -118,49 +102,4 @@ function getGeneratorKiroilu() {
     });
 };
 
-function getGeneratorKiroilu() {
-  return pool.connect()
-    .then(client => {
-      let sql = "SELECT sentence FROM generator WHERE category='kiroilu' ORDER BY RANDOM() LIMIT 1;";
-      return client.query(sql)
-        .then(res => {
-          client.release();
-          return res.rows;
-        })
-        .catch(err => {
-          client.release();
-          throw error;
-        });
-    });
-};
-
-// function addQuote(q, response) {
-//   console.log(q)
-//   return pool.connect()
-//     .then(client => {
-//       const kysely = {
-//         text: 'insert into bingo(quote) values('+ quote +')',
-//         values: [q]
-//       };
-//       client.query(kysely, (error, results) => {
-//         if (error) {
-//           throw (error);
-//         }
-//         //response.status(201).send(`Quote added`)
-//       });
-//     });
-// };
-
-const addQuote = (request, response) => {
-  const { quote } = request.body
-
-  pool.query('INSERT INTO bingo (quote) VALUES ($1)', [quote], (error, results) => {
-    if (error) {
-      throw error
-    }
-    //response.status(201).send(`Quote added`)
-    console.log("quote added")
-  })
-}
-
-module.exports = { getBingoData, addQuote, getGeneratorAjatus, getGeneratorTsemppi, getGeneratorKiroilu };
+module.exports = { getBingoData, getGeneratorAjatus, getGeneratorTsemppi, getGeneratorKiroilu };
