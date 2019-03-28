@@ -4,12 +4,6 @@ require('dotenv').config()
 const encoding = require('encoding');
 
 const Pool = require('pg').Pool;
-// const { Client } = require('pg');
-
-// const client = new Client({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: true,
-// });
 
 const conopts = {
   user: process.env.PGUSER,
@@ -19,9 +13,9 @@ const conopts = {
   database: process.env.DATABASE,
   connectionString: process.env.DATABASE_URL,
   ssl: true,
-  //sslmode: "require"
+
   client_encoding: "utf-8"
-  // sslmode: "require"
+  
 };
 
 // const pool = new Pool(conopts);
@@ -36,16 +30,7 @@ function getBingoData() {
       let sql = "SELECT * FROM bingo ORDER BY RANDOM() LIMIT 16;";
       return client.query(sql)
         .then(res => {
-          // console.log("Ennen muutosta", res.rows);
-          // const newrows = res.rows.map(row => {
-          //   let rowtoreturn = {};
-          //   for (let r in row) {
-          //     rowtoreturn[r] = encoding.convert(row[r], 'latin6', 'utf-8').toString();
-          //   }
-          //   return rowtoreturn;
-          // })
           client.release();
-          // console.log("Muutettu", newrows);
           return res.rows;
         })
         .catch(err => {
