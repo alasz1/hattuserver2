@@ -1,1 +1,699 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="shortcut icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/><meta name="theme-color" content="#000000"/><link rel="manifest" href="/manifest.json"/><link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"><link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"><title>React App</title><link href="/static/css/main.95bbbe43.chunk.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script>!function(l){function e(e){for(var r,t,n=e[0],o=e[1],u=e[2],f=0,i=[];f<n.length;f++)t=n[f],p[t]&&i.push(p[t][0]),p[t]=0;for(r in o)Object.prototype.hasOwnProperty.call(o,r)&&(l[r]=o[r]);for(s&&s(e);i.length;)i.shift()();return c.push.apply(c,u||[]),a()}function a(){for(var e,r=0;r<c.length;r++){for(var t=c[r],n=!0,o=1;o<t.length;o++){var u=t[o];0!==p[u]&&(n=!1)}n&&(c.splice(r--,1),e=f(f.s=t[0]))}return e}var t={},p={1:0},c=[];function f(e){if(t[e])return t[e].exports;var r=t[e]={i:e,l:!1,exports:{}};return l[e].call(r.exports,r,r.exports,f),r.l=!0,r.exports}f.m=l,f.c=t,f.d=function(e,r,t){f.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},f.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},f.t=function(r,e){if(1&e&&(r=f(r)),8&e)return r;if(4&e&&"object"==typeof r&&r&&r.__esModule)return r;var t=Object.create(null);if(f.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:r}),2&e&&"string"!=typeof r)for(var n in r)f.d(t,n,function(e){return r[e]}.bind(null,n));return t},f.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return f.d(r,"a",r),r},f.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},f.p="/";var r=window.webpackJsonp=window.webpackJsonp||[],n=r.push.bind(r);r.push=e,r=r.slice();for(var o=0;o<r.length;o++)e(r[o]);var s=n;a()}([])</script><script src="/static/js/2.92203e41.chunk.js"></script><script src="/static/js/main.f75d41ce.chunk.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hate Speech Invaders</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+        @font-face {
+            font-family: Arcadepix;
+            src: url('assets/ARCADEPI.TTF');
+            font-weight: 400;
+            font-weight: normal;
+        }
+
+        @font-face {
+            font-family: Silkscreen;
+            src: url('assets/slkscr.TTF');
+            font-weight: 400;
+            font-weight: normal;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        * {
+            font-family: Arcadepix;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style="font-family: Arcadepix; position:absolute; left:-1000px; visibility:hidden;">.</div>
+    <div style="font-family: Silkscreen; position:absolute; left:-1000px; visibility:hidden;">.</div>
+
+    <script type="text/javascript">
+
+        var config = {
+            type: Phaser.AUTO,
+            // width: 800,
+            // height: 600,
+            width: window.innerWidth,
+            height: window.innerHeight,
+            autoResize: true,
+            pixelArt: true,
+            roundPixels: true,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update,
+                resize: resize,
+            }
+
+        };
+
+        var player;
+        var playerbullets;
+        var badguybullets;
+        var badguys;
+        var hatespeech;
+        var cursors;
+        var score = 0;
+        var gameOver = false;
+        var scoreText;
+        var soundText;
+        var soundConfig = true;
+        var soundSwitch;
+        var explosion;
+        var playerShootSwitch;
+        var rndTimer = 1000;
+        var timeToShoot;
+        var badguysKilled = 0;
+        var gameCanStart;
+        var totalBadguysKilled = 0;
+        var level = 0;
+        var changelevel;
+        var changelevel2;
+        var playerLives = 3;
+
+        //var StartScreen = new Phaser.Scene(config)
+
+        var game = new Phaser.Game(config);
+
+        // StartScreen.preload = function () {
+        //     this.load.image('sky', 'assets/sky.png');
+        // }
+        // StartScreen.create = function () {
+        //     this.add.image(400, 300, 'sky');
+        // }
+
+
+
+        function preload() {
+            
+            level += 1;
+            badguysKilled = 0;
+            totalBadguysKilled = 0;
+            gameCanStart = false;
+
+            console.log('PRELOAD, level: ' + level + 'score: ' + score)
+
+            // Load graphics
+
+            this.load.image('sky', 'assets/sky.png');
+            this.load.image('ground', 'assets/platform.png');
+            //this.load.image('hatespeech', 'assets/hatespeech.png');
+            this.load.image('playerbullet', 'assets/heart.png');
+            this.load.spritesheet('player', 'assets/hero-big.png', { frameWidth: 48, frameHeight: 60 });
+            this.load.spritesheet('player-idle', 'assets/hero-idle-big.png', { frameWidth: 48, frameHeight: 60 });
+            this.load.spritesheet('explosion', 'assets/explosion-6.png', { frameWidth: 48, frameHeight: 48 });
+            this.load.spritesheet('explosion2', 'assets/explosion-2.png', { frameWidth: 64, frameHeight: 64 });
+            this.load.spritesheet('explosion3', 'assets/explosion-4.png', { frameWidth: 128, frameHeight: 128 });
+            this.load.spritesheet('badguy', 'assets/enemy.png', { frameWidth: 43, frameHeight: 59 });
+            this.load.spritesheet('badguybullet', 'assets/kuplat.png', { frameWidth: 100, frameHeight: 100 });
+
+            // Load sound effects
+
+            this.load.audio('shoot', 'assets/shoot.mp3', {
+                instances: 1
+            });
+            this.load.audio('hit', 'assets/hit2.wav', {
+                instances: 1
+            });
+            this.load.audio('hit2', 'assets/hit.wav', {
+                instances: 1
+            });
+            this.load.audio('hit3', 'assets/hit.mp3', {
+                instances: 1
+            });
+
+        }
+
+        function create() {
+
+            //console.log('level: ' + level);
+
+            //  A simple background for our game
+            this.add.image(window.innerWidth / 2, 300, 'sky').setScale((window.innerWidth / 100), 1);
+
+            // Set world boundaries based on initial screen size
+
+            // BELOW FOR SMALL SCREENS -> ADD L&R MARGINS FOR WIDER SCREENS
+
+            var width = this.sys.game.config.width;
+            var height = this.sys.game.config.height;
+            // set top x&y coordinates & width&height of boundary
+            this.physics.world.setBounds(10, 0, (width - 20), height, true, true, true, true);
+
+            // //  Now let's create some ledges
+            // platforms.create(600, 400, 'ground');
+            // platforms.create(50, 250, 'ground');
+            // platforms.create(750, 220, 'ground');
+
+
+            //  The platforms group 
+            platforms = this.physics.add.staticGroup();
+
+            //  Create ground, scale it to fit the width of the game
+            platforms.create(window.innerWidth / 2, 978, 'ground').setScale((window.innerWidth / 100), 1).refreshBody();
+
+            // The player and its settings
+            player = this.physics.add.sprite((window.innerWidth / 2), 550, 'player');
+
+            //  Player physics properties. Give the little guy a slight bounce.
+            player.setBounce(0.2);
+            player.setCollideWorldBounds(true);
+
+
+            //  Our player animations, turning, walking left and walking right.
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('player', { start: 6, end: 11 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'turn',
+                frames: [{ key: 'player-idle', frame: 0 }],
+                frameRate: 20
+            });
+
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('player', { start: 0, end: 5 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'badguy',
+                frames: this.anims.generateFrameNumbers('badguy', { start: 0, end: 3 }),
+                frameRate: 10,
+                repeat: 1000000
+            });
+
+            this.anims.create({
+                key: 'explode',
+                frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 7 }),
+                frameRate: 20
+            });
+
+            this.anims.create({
+                key: 'explode2',
+                frames: this.anims.generateFrameNumbers('explosion2', { start: 0, end: 7 }),
+                frameRate: 20
+            });
+
+            this.anims.create({
+                key: 'explode3',
+                frames: this.anims.generateFrameNumbers('explosion3', { start: 0, end: 11 }),
+                frameRate: 20
+            });
+
+            for (let i = 0; i < 13; i++) {
+                this.anims.create({
+                    key: ('badguybullet' + i),
+                    frames: this.anims.generateFrameNumbers('badguybullet', { start: i, end: i }),
+                    frameRate: 20
+                });
+            }
+
+            this.sound.add('shoot');
+            this.sound.add('hit');
+            this.sound.add('hit2');
+            this.sound.add('hit3');
+
+            // explosion = this.add.sprite('explosion');
+            // // animation will complete, the emit event
+            // explosion.on('animationcomplete', animComplete, this);
+            // explosion.play('explosion');
+
+            //  Input Events
+            cursors = this.input.keyboard.createCursorKeys();
+            s = this.input.keyboard.addKeys(Phaser.Input.Keyboard.KeyCodes.S);
+
+
+
+
+            //  bad guys' group - 6 x 6
+            // for (let i = 0; i < 6; i++) {
+            //     badguy = this.physics.add.group({
+            //         key: 'badguy',
+            //         repeat: 5,
+            //         setXY: { x: 150, y: 100 + (50 * i), stepX: areaDivider }
+            //     });
+            // }
+
+            badguys = this.physics.add.group();
+
+            //  badguy.children.iterate(function (child) {
+
+            //     //  Give each star a slightly different bounce
+            //     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+            // });
+
+            //  The score
+            scoreText = this.add.text(6, 6, 'SCORE: ' + score, { fontFamily: 'Arcadepix', fontSize: '20px', fill: '#fff' });
+
+            // Sound config
+
+            soundText = this.add.text(186, 6, 'SOUND: ON', { fontFamily: 'Arcadepix', fontSize: '20px', fill: '#fff' });
+
+            // Level
+
+            levelText = this.add.text(346, 6, 'LEVEL: ' + level, { fontFamily: 'Arcadepix', fontSize: '20px', fill: '#fff' });
+
+            // Text below
+
+            this.add.text(window.innerWidth / 2 - 40, window.innerHeight - 130, 'Level ' + level, { fontFamily: 'Silkscreen', fontSize: '20px', fill: '#fff' });
+            this.add.text(window.innerWidth / 2 - 280, window.innerHeight - 100, 'Press SPACE to start', { fontFamily: 'Arcadepix', fontSize: '40px', fill: '#fff' });
+            this.add.text(window.innerWidth / 2 - 220, window.innerHeight - 50, 'Press SHIFT to turn sounds on/off', { fontFamily: 'Silkscreen', fontSize: '20px', fill: '#fff' });
+
+            playerbullets = this.physics.add.group();
+            badguybullets = this.physics.add.group();
+
+            // //  The score
+            // scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+            // //  Collide the player and the stars with the platforms
+            // this.physics.add.collider(player, platforms);
+            // this.physics.add.collider(stars, platforms);
+            // this.physics.add.collider(bombs, platforms);
+
+            // Checks to see if player bullet overlaps with any of the bad guys/badguybullets
+            // -> if they do, call the killbadguy/killbadguybullet function
+
+            this.physics.add.overlap(playerbullets, badguys, killBadguy, null, this);
+            this.physics.add.overlap(playerbullets, badguybullets, killBadguyBullets, null, this);
+            this.physics.add.overlap(badguybullets, player, killPlayer, null, this);
+            this.physics.add.overlap(badguys, player, killPlayer, null, this);
+
+            // Badguybullets bounce from each other (not working, why?)
+            // this.physics.add.collider(badguybullets, badguybullets);
+
+            this.physics.add.collider(badguys, platforms, badguyHitsGround, null, this);
+            this.physics.add.collider(badguybullets, platforms, badguyBulletHitsGround, null, this);
+
+
+            this.events.on('resize', resize, this);
+
+            // Spawn & set movement of enemies
+
+            console.log(window.innerWidth)
+            var areaDivider = ((window.innerWidth - 400) / 2)
+
+            // Create enemies
+
+            for (let i = 0; i < 6; i++) {
+                for (let j = 0; j < 6; j++) {
+                    var x = areaDivider + (i * 80);
+                    var y = 60 + j * 60;
+                    var badguy = badguys.create(x, y, 'badguy');
+                    badguy.anims.play('badguy', true);
+                    badguy.setBounce(1);
+                    badguy.setCollideWorldBounds(true);
+                    badguy.setVelocity(40 + (30 * level - 30), 1);
+                    badguy.allowGravity = false;
+
+                    // badguy.on('hitBorder', () => {
+                    //     console.log('wall hit')
+                    // }, this);
+                }
+
+            }
+
+            timeToShoot = this.time.addEvent({
+                delay: rndTimer,
+                callback: badguyShoot,
+                callbackScope: this,
+                loop: true
+            });
+
+            // waitBetweenLevels = this.time.addEvent({
+            //     delay: 3000,
+            //     callback: changeLevel,
+            //     callbackscope: this
+            // });
+
+            //this.startmenuBox.create(100, 100, 'ground').setScale((window.innerWidth / 2), 1).refreshBody();
+
+        }
+
+        function update() {
+
+
+
+            if (!gameCanStart) {
+                timeToShoot.paused = true;
+                // this.add.text(window.innerWidth / 2 - 40, window.innerHeight - 130, 'Level ' + level, { fontFamily: 'Silkscreen', fontSize: '20px', fill: '#fff' });
+                // this.add.text(window.innerWidth / 2 - 280, window.innerHeight - 100, 'Press SPACE to start', { fontFamily: 'Arcadepix', fontSize: '40px', fill: '#fff' });
+                // this.add.text(window.innerWidth / 2 - 220, window.innerHeight - 50, 'Press SHIFT to turn sounds on/off', { fontFamily: 'Silkscreen', fontSize: '20px', fill: '#fff' });
+
+            }
+
+            if (!gameCanStart && cursors.space.isDown) {
+                timeToShoot.paused = false;
+                gameCanStart = true;
+                this.add.text(window.innerWidth / 2 - 40, window.innerHeight - 130, '       ', { fontFamily: 'Silkscreen', fontSize: '40px', fill: '#898989', backgroundColor: '#1a9f7d' })
+                this.add.text(window.innerWidth / 2 - 280, window.innerHeight - 100, '                        ', { fontFamily: 'Arcadepix', fontSize: '40px', fill: '#898989', backgroundColor: '#1a9f7d' });
+                this.add.text(window.innerWidth / 2 - 220, window.innerHeight - 50, '                             ', { fontFamily: 'Silkscreen', fontSize: '40px', fill: '#898989', backgroundColor: '#1a9f7d' });
+
+                this.physics.resume()
+            }
+
+            if (!gameCanStart) {
+                this.physics.pause();
+            }
+
+
+
+
+            if (gameOver) {
+
+                timeToShoot.reset({
+                    paused: true
+                });
+
+                //return;
+                // Display "Game Over" at center of the screen
+                this.add.text(window.innerWidth / 2 - 142, window.innerHeight / 2 + 2, 'GAME OVER', { fontFamily: 'Arcadepix', fontSize: '40px', fill: 'black' });
+                this.add.text(window.innerWidth / 2 - 140, window.innerHeight / 2, 'GAME OVER', { fontFamily: 'Arcadepix', fontSize: '40px', fill: '#ff63e7' });
+
+            }
+
+            // Map control keys
+
+            if (cursors.left.isDown) {
+                player.setVelocityX(-160);
+
+                player.anims.play('left', true);
+            }
+            else if (cursors.right.isDown) {
+                player.setVelocityX(160);
+
+                player.anims.play('right', true);
+            }
+            else {
+                player.setVelocityX(0);
+
+                player.anims.play('turn');
+            }
+
+            if (cursors.space.isDown) {
+                if (!playerShootSwitch) {
+                    //scoreText = this.add.text(16, 40, 'SPACE DOWN', { fontFamily: 'Arcadepix', fontSize: '30px', fill: '#fff' });
+                    //scoreText = this.add.text(16, 40, 'SPACE DOWN', { fontFamily: 'Arcadepix', fontSize: '30px', fill: '#000' });
+                    // player.setData("isShooting", true);
+
+                    if (soundConfig) {
+                        this.sound.play('shoot');
+                    }
+
+                    shoot();
+
+                    // badguys.children.entries[badguys.children.entries.length - 1].anims.play('turn');
+                    // badguys.children.entries[0].anims.play('turn');
+
+                }
+            } else {
+                playerShootSwitch = false;
+                //scoreText = this.add.text(16, 40, 'SPACE UP', { fontFamily: 'Arcadepix', fontSize: '30px', fill: '#fff' });
+                // this.player.setData("isShooting", false);
+            }
+
+            if (cursors.shift.isDown) {
+                if (!soundSwitch) {
+                    soundConfig = !soundConfig;
+                    if (soundConfig) {
+                        soundText.setText('SOUND: ON');
+                        soundConfig = true;
+                    } else {
+                        soundText.setText('SOUND: OFF');
+                        soundConfig = false;
+                    }
+                    soundSwitch = true;
+                }
+            } else {
+                soundSwitch = false;
+            }
+
+            game.renderer.resize(window.innerWidth, window.innerHeight, 1.0);
+
+            // Enemy movement
+
+            // badguy.setCollideWorldBounds(true);
+            // badguy.setVelocity(20, 0);
+            // badguy.allowGravity = false;
+
+
+            // If one enemy hits wall, all enemies switch direction
+
+            if (badguys.children.entries[badguys.children.entries.length - 1].body.position.x > (window.innerWidth - 54) || badguys.children.entries[0].body.position.x < (11)) {
+
+                console.log('wall hit')
+                console.log(badguys.children.entries[0].body.gameObject.body.velocity)
+
+                for (let n = 0; n < badguys.children.entries.length; n++) {
+
+                    badguys.children.entries[n].setVelocityX(badguys.children.entries[n].body.gameObject.body.velocity.x * -1);
+
+                }
+            }
+
+            // If one enemy hits ground -> game over
+
+            // When all 36 enemies have been destroyed -> change level
+
+            if (changelevel) {
+                this.scene.pause();
+
+                this.add.text(window.innerWidth / 2 - 192, window.innerHeight / 2 + 2, 'LEVEL COMPLETE', { fontFamily: 'Arcadepix', fontSize: '40px', fill: 'black' });
+                this.add.text(window.innerWidth / 2 - 190, window.innerHeight / 2, 'LEVEL COMPLETE', { fontFamily: 'Arcadepix', fontSize: '40px', fill: '#fff' });
+                //this.time.delayedCall(2000, onEvent, null, this);
+
+                setTimeout(() => {
+                    this.scene.restart();
+                    //this.physics.resume();
+                    //player.setTint(0xff0000);
+                }, 3000);
+
+
+
+                console.log(changelevel2)
+                changelevel = false;
+
+                //this.scene.restart({score: this.score});
+            }
+
+        }
+
+        function shoot() {
+
+            var x = player.x;
+            var y = player.y;
+
+            //setTimeout(function(){ CONTENT }, 400);
+
+            var playerbullet = playerbullets.create(x, (y - 20), 'playerbullet');
+            //playerbullet.setBounce(1);
+
+
+            playerbullet.setCollideWorldBounds(false);
+            playerbullet.setVelocity(0, -600);
+            playerbullet.allowGravity = false;
+            playerShootSwitch = true;
+        }
+
+        function badguyShoot() {
+
+            var rndBadguy = Math.floor(Math.random() * badguys.children.entries.length);
+
+            console.log(badguys)
+            console.log(badguys.children.entries[rndBadguy].body.position.x)
+
+            var x = badguys.children.entries[rndBadguy].body.position.x;
+            var y = badguys.children.entries[rndBadguy].body.position.y;
+
+            let rnd = Math.floor(Math.random() * 12);
+            console.log(rnd);
+            var badguybullet = badguybullets.create(x, (y + 80), 'badguybullet' + rnd);
+            badguybullet.setSize(100, 100);
+            badguybullet.anims.play('badguybullet' + rnd, true);
+
+            badguybullet.setCollideWorldBounds(false);
+            badguybullet.setVelocity(0, 50);
+            badguybullet.allowGravity = false;
+
+            rndTimer = Math.floor(Math.random() * 3000);
+
+            timeToShoot.reset({
+                delay: Phaser.Math.Between(100, 5000),
+                callback: badguyShoot,
+                callbackScope: this,
+                loop: true
+            });
+        }
+
+        // function badguyShootSwitch() {
+        //     timeToShoot = true;
+        // }
+
+        function resize(width, height) {
+            if (width === undefined) { width = this.sys.game.config.width; }
+            if (height === undefined) { height = this.sys.game.config.height; }
+
+            if (width > 800) {
+                width = 800;
+            }
+
+            console.log(width)
+            //this.cameras.resize(width, height);
+            //this.physics.world.setBounds(this.x, this.y, width, height, true, true, true, true);
+            //this.cameras.main.setBounds(0, 0, width, height);
+
+            //this.bg.setSize(width, height);
+            //this.logo.setPosition(width / 2, height / 2);
+        }
+
+        function killBadguy(playerbullet, badguy) {
+
+            var badguyVelocityX = badguy.body.velocity.x;
+            var badguyVelocityY = badguy.body.velocity.y;
+
+            playerbullet.disableBody(true, true);
+            badguy.anims.play('explode', true);
+            // setTimeout(function () { badguy.disableBody(true, true) }, 400);
+
+            // Crashes when last badguy is destroyed! (change to disableBody?)
+            setTimeout(function () { badguy.destroy(true) }, 400);
+
+            //  Add and update the score, play sound & update badguyskilled vars. 
+            if (!badguy.score) {
+                if (soundConfig) {
+                    this.sound.play('hit');
+                }
+                score += 10;
+                badguysKilled += 1;
+                totalBadguysKilled += 1;
+                scoreText.setText('SCORE: ' + score);
+                badguy.score = true;
+            }
+
+            // Accelerate enemies after 5 shots
+
+
+
+            if (badguysKilled === 5) {
+                badguys.setVelocity((badguyVelocityX + (10 * Math.sign(badguyVelocityX))), badguyVelocityY + 2);
+                badguysKilled = 0;
+            }
+            console.log(badguysKilled)
+
+            // Change level when all bad guys killed
+
+            console.log('total killed: ' + totalBadguysKilled)
+            if (totalBadguysKilled === 36) {
+                changelevel = true;
+                // this.add.text(window.innerWidth / 2 - 142, window.innerHeight / 2 + 2, 'LEVEL COMPLETE', { fontFamily: 'Arcadepix', fontSize: '40px', fill: 'black' });
+                // this.add.text(window.innerWidth / 2 - 140, window.innerHeight / 2, 'LEVEL COMPLETE', { fontFamily: 'Arcadepix', fontSize: '40px', fill: '#1FB58F' });
+                // this.physics.pause();
+                // setTimeout(function(){ this.physics.resume(); }, 3000);
+                // this.scene.restart({score: this.score});
+            }
+        }
+
+
+
+
+
+        function killBadguyBullets(playerbullet, badguybullet) {
+
+            playerbullet.disableBody(true, true);
+            // badguybullet.disableBody(false, true);
+            badguybullet.anims.play('explode2', true);
+            setTimeout(function () { badguybullet.disableBody(true, true) }, 400);
+
+            //  Add and update the score, play sound
+            if (!badguybullet.score) {
+                if (soundConfig) {
+                    this.sound.play('hit');
+                }
+                score += 5;
+                scoreText.setText('SCORE: ' + score);
+                badguybullet.score = true;
+            }
+        }
+
+        function killPlayer(badguybullet, player) {
+
+            playerLives -= 1;
+
+            // if (playerLives === 0) {
+                this.physics.pause();
+                badguybullet.disableBody(true, true);
+                player.anims.play('explode3', true);
+                setTimeout(function () { player.disableBody(true) }, 400);
+                if (soundConfig) {
+                    this.sound.play('hit2');
+                }
+                gameOver = true;
+            // } else {
+            //     if (soundConfig) {
+            //         this.sound.play('hit');
+            //     }
+            //     player.setTint(0xff0000);
+            //     setTimeout(() => {
+            //         player.setTint(none);
+            //     }, 3000);
+            // }
+        }
+
+        function badguyHitsGround(badguy, ground) {
+            this.physics.pause();
+            //player.setTint(0xff0000);
+            player.anims.play('explode3');
+            gameOver = true;
+        }
+
+        function badguyBulletHitsGround(badguybullet, ground) {
+            badguybullet.disableBody(true, true);
+            // animaatio ei toimi, miksi?
+            badguybullet.anims.play('explode2', true);
+            setTimeout(function () { badguybullet.disableBody(true, true) }, 400);
+            if (soundConfig) {
+                this.sound.play('hit');
+            }
+        }
+
+        //         function animComplete (animation, frame)
+        // {
+        //     //  Animation is over, let's fade the sprite out
+        //     this.tweens.add({
+        //         targets: explosion,
+        //         duration: 3000,
+        //         alpha: 0
+        //     });
+        // }
+
+        window.addEventListener('resize', () => {
+            game.resize(window.innerWidth, window.innerHeight);
+            //scene.cameras.main.setViewport(0,0,width,height);
+        });
+
+    </script>
+</body>
+
+</html>
